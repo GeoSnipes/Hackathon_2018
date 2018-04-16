@@ -1,0 +1,88 @@
+pipeline {
+    agent none
+	//defining the cloning stage which clone the git repo into master and agent node
+    stages {
+        stage('Clone') {
+            parallel {
+    		 stage('clone to master') {
+                        agent {
+                            label "master"
+                        }
+                        steps {
+                            
+                            git 'https://github.com/shalin51/Hackathon_2018'
+            				notify("Cloning done")
+                        }
+               }
+            
+            stage('clone to Agent1') {
+                        agent {
+                            label "cluster2_node1"
+                        }
+                        steps {
+                            
+                            git 'https://github.com/shalin51/Hackathon_2018'
+            				notify("Cloning done")
+                        }
+                  }
+            
+			}
+    }
+	 //defining the building stage which built the given angular project in parallel manner using master and agent
+     stage('build') {
+            parallel {
+                stage('Building  Master') {
+                    agent {
+                        label "master"
+                    }
+                    steps {
+						sh '''cd gittalent-frontend
+						npm install
+						ng build
+						docker build  -t frontend .'''
+              
+					}
+                }
+                stage('Building Agent1') {
+                    agent {
+                        label "cluster2_node1"
+                    }
+                     steps {
+						sh '''cd gittalent-frontend
+						npm install
+						ng build
+						docker build  -t frontend .'''              
+					}
+                }
+            }
+        }
+		//defining the deploy stage which deploy the given angular project as docker instances
+		stage('Deploy') {
+           agent {
+				node {
+					label 'master'
+				}
+			} 
+            steps {				
+               
+			   //reading from file "servers2.txt" 
+			   //the this has a list of server address which are addresses in this example
+			   sh '''PORT=7000
+			   while read p; do
+					docker run -d -p $PORT:80 --name angular$PORT frontend &
+					PORT=$(PORT+1) 
+					
+				done <./servers2.txt'''
+            }
+        }  
+}		
+}
+
+def notify(status){
+    emailext (
+      to: "khushbu.k.0110@gmail.com",
+      subject: "${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+      body: """<p>${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+        <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
+    )
+}
