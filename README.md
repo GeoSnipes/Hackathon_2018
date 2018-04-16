@@ -6,6 +6,8 @@ This repository contains following folder with required code for IBM usecase.
   * Script folder : It contain script file 
   * Project folder : It contains project code that will be cloned and deployed to multiple server,if user updates the code
 2. Documentation folder : It contain project output screenshot
+
+PPT : https://docs.google.com/presentation/d/1kIKovHj9hGcCgvdkBEhF50fQDz0RDCLa-lAARFiRRA4/edit?usp=sharing
           
 
 [![Keynote: Beyond NoSQL – Building a digital future – Couchbase Connect 2016](https://img.youtube.com/vi/Bq8zkcbnRac/0.jpg)](https://youtu.be/Bq8zkcbnRac?t=1579) 
