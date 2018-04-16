@@ -3,8 +3,8 @@
 This repository contains following folder with required code for IBM usecase.
 
 1. Source folder : It contain project script and code
-              1. Script folder : It contain script file 
-              2. Project folder : It contains project code that will be cloned and deployed to multiple server,if user updates the code
+  1. Script folder : It contain script file 
+  2. Project folder : It contains project code that will be cloned and deployed to multiple server,if user updates the code
 2. Documentation : It contain project output screenshot
           
 
